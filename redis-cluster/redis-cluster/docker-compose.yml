@@ -1,0 +1,88 @@
+version: '2'
+services:
+  redis1:
+    image: redis:4.0-alpine
+    volumes:
+      - ./redis1/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./redis1/data:/data
+    ports: 
+      - 6456:6379
+    networks:
+      redisnet:
+        ipv4_address: 10.0.0.2
+    command: [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
+  redis2:
+    image: redis:4.0-alpine
+    volumes:
+      - ./redis2/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./redis2/data:/data
+    ports: 
+      - 6457:6379
+    networks:
+      redisnet:
+        ipv4_address: 10.0.0.3
+    command: [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
+  redis3:
+    image: redis:4.0-alpine
+    volumes:
+      - ./redis3/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./redis3/data:/data
+    ports: 
+      - 6458:6379
+    networks:
+      redisnet:
+        ipv4_address: 10.0.0.4
+    command: [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
+  redis4:
+    image: redis:4.0-alpine
+    volumes:
+      - ./redis4/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./redis4/data:/data
+    ports: 
+      - 6459:6379
+    networks:
+      redisnet:
+        ipv4_address: 10.0.0.5
+    command: [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
+  redis5:
+    image: redis:4.0-alpine
+    volumes:
+      - ./redis5/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./redis5/data:/data
+    ports: 
+      - 6460:6379
+    networks:
+      redisnet:
+        ipv4_address: 10.0.0.6
+    command: [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
+  redis6:
+    image: redis:4.0-alpine
+    volumes:
+      - ./redis6/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./redis6/data:/data
+    ports: 
+      - 6461:6379
+    networks:
+      redisnet:
+        ipv4_address: 10.0.0.7
+    command: [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
+  cli:
+    build: ./cli
+    networks:
+      redisnet:
+        ipv4_address: 10.0.0.8
+    depends_on:
+      - redis1
+      - redis2
+      - redis3
+      - redis4
+      - redis5
+      - redis6
+
+
+networks:
+  redisnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.0.0/16
