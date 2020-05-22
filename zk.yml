@@ -1,0 +1,66 @@
+version: '2'
+services:
+  zoo1:
+    image: zookeeper:3.4 # 镜像名称
+    restart: always # 当发生错误时自动重启
+    hostname: zoo1
+    container_name: zoo1
+    privileged: true
+    ports: # 端口
+      - 1181:2181
+    volumes: # 挂载数据卷
+      - ./zoo1/data:/data
+      - ./zoo1/datalog:/datalog 
+    environment:
+      TZ: Asia/Shanghai
+      ZOO_MY_ID: 1 # 节点ID
+      ZOO_PORT: 2181 # zookeeper端口号
+      ZOO_SERVERS: server.1=zoo1:2888:3888 server.2=zoo2:2888:3888 server.3=zoo3:2888:3888 # zookeeper节点列表
+    networks:
+      default:
+        ipv4_address: 172.21.0.11
+
+  zoo2:
+    image: zookeeper:3.4
+    restart: always
+    hostname: zoo2
+    container_name: zoo2
+    privileged: true
+    ports:
+      - 1182:2181
+    volumes:
+      - ./zoo2/data:/data
+      - ./zoo2/datalog:/datalog
+    environment:
+      TZ: Asia/Shanghai
+      ZOO_MY_ID: 2
+      ZOO_PORT: 2181
+      ZOO_SERVERS: server.1=zoo1:2888:3888 server.2=zoo2:2888:3888 server.3=zoo3:2888:3888
+    networks:
+      default:
+        ipv4_address: 172.21.0.12
+
+  zoo3:
+    image: zookeeper:3.4
+    restart: always
+    hostname: zoo3
+    container_name: zoo3
+    privileged: true
+    ports:
+      - 1183:2181
+    volumes:
+      - ./zoo3/data:/data
+      - ./zoo3/datalog:/datalog
+    environment:
+      TZ: Asia/Shanghai
+      ZOO_MY_ID: 3
+      ZOO_PORT: 2181
+      ZOO_SERVERS: server.1=zoo1:2888:3888 server.2=zoo2:2888:3888 server.3=zoo3:2888:3888
+    networks:
+      default:
+        ipv4_address: 172.21.0.13
+
+networks:
+  default:
+    external:
+      name: zoo_kafka
